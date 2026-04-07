@@ -1,0 +1,2438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleHub - Online Shopping</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: #333;
+            overflow-x: auto;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header .brand {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+
+        header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .view-switcher {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .view-switcher button {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s ease;
+        }
+
+        .view-switcher button.active {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .view-switcher button:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .nav-actions button {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: white;
+            padding: 10px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .nav-actions button:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-1px);
+        }
+
+        .page {
+            display: none;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.35s ease-in;
+        }
+
+        .active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        input, select {
+            padding: 12px;
+            margin: 10px 0;
+            width: 100%;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.25s;
+            background: #fafafa;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 10px rgba(102, 126, 234, 0.18);
+        }
+
+        button,
+        .action-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            margin: 10px 5px 0 0;
+            cursor: pointer;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.25s;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.25);
+        }
+
+        button:hover,
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(102, 126, 234, 0.35);
+        }
+
+        button:disabled,
+        .action-button:disabled {
+            background: #c3c3d1;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        button:active,
+        .action-button:active {
+            transform: translateY(0);
+        }
+
+        .login-container,
+        .home-hero,
+        .cart-summary,
+        .payment-form,
+        .success-container {
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+
+        .login-container,
+        .payment-form,
+        .cart-summary,
+        .success-container {
+            max-width: 520px;
+            margin: 30px auto;
+        }
+
+        .login-container h2,
+        .home-hero h2,
+        .cart-summary h3,
+        .success-container h2 {
+            color: #3f51b5;
+            margin-bottom: 22px;
+        }
+
+        .home-hero {
+            max-width: 760px;
+            text-align: left;
+        }
+
+        .home-hero h2 {
+            font-size: 36px;
+            line-height: 1.1;
+        }
+
+        .home-hero p {
+            font-size: 18px;
+            color: #556;
+            margin: 20px 0 30px;
+            line-height: 1.7;
+        }
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 26px;
+            margin: 30px 0;
+        }
+
+        .products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .product img {
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-section {
+            display: none;
+        }
+
+        .product,
+        .cart-item,
+        .payment-method {
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .product {
+            background: white;
+            padding: 22px;
+            border: 1px solid #e7e7ef;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product:hover {
+            transform: translateY(-6px);
+            border-color: #cdd4f3;
+            box-shadow: 0 18px 50px rgba(102,126,234,0.12);
+        }
+
+        .product img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 18px;
+        }
+
+        .product h3 {
+            color: #223057;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .product p {
+            color: #2d3e72;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 18px;
+        }
+
+        .product button {
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .cart-item {
+            background: #fff;
+            border: 1px solid #e5e8ff;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .cart-item strong {
+            display: block;
+            color: #2b3d80;
+            font-size: 17px;
+            margin-bottom: 8px;
+        }
+
+        .cart-item span {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        .cart-item button {
+            background: #ff4d6d;
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 13px;
+            box-shadow: 0 8px 16px rgba(255,77,109,0.16);
+        }
+
+        .cart-summary {
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .cart-summary h3 {
+            margin-bottom: 16px;
+        }
+
+        .cart-summary .summary-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 30px 0 10px;
+        }
+
+        .payment-method {
+            background: white;
+            padding: 24px;
+            border: 3px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+        }
+
+        .payment-method:hover,
+        .payment-method.selected {
+            border-color: #667eea;
+            background: #f2f5ff;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.14);
+        }
+
+        .payment-method img {
+            width: 72px;
+            height: 72px;
+            margin-bottom: 14px;
+            object-fit: contain;
+        }
+
+        .payment-method p {
+            font-weight: 700;
+            color: #2b3d80;
+            margin-bottom: 6px;
+        }
+
+        .payment-method small {
+            color: #556;
+        }
+
+        .payment-form {
+            display: none;
+        }
+
+        .payment-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin: 18px 0;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #303b6d;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .success-container {
+            text-align: center;
+            max-width: 640px;
+        }
+
+        .success-icon {
+            font-size: 86px;
+            margin-bottom: 18px;
+        }
+
+        .success-container p {
+            color: #5f637a;
+            font-size: 17px;
+            line-height: 1.75;
+            margin: 14px 0;
+        }
+
+        .nav-note,
+        .form-note {
+            color: #4b5b91;
+            margin-top: 12px;
+            font-size: 14px;
+        }
+
+        .back-button {
+            background: #f0f0f0;
+            color: #333;
+            border: 1px solid #d4d4d4;
+        }
+
+        .back-button:hover {
+            background: #e5e5e5;
+        }
+
+        .page-title {
+            color: #3f51b5;
+            font-size: 34px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .cart-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            color: #34408b;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            border: 1px solid rgba(102, 126, 234, 0.18);
+        }
+
+        .message-box {
+            background: #fffbec;
+            color: #7b5f00;
+            border: 1px solid #f2d47a;
+            padding: 16px;
+            border-radius: 16px;
+            margin: 10px auto 0;
+            max-width: 760px;
+        }
+
+        .order-history-item {
+            background: white;
+            border: 1px solid #e5e8ff;
+            padding: 20px;
+            margin: 15px auto;
+            max-width: 600px;
+            border-radius: 15px;
+            text-align: left;
+        }
+
+        .order-history-item h4 {
+            color: #3f51b5;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .order-history-item p {
+            color: #556;
+            font-size: 14px;
+            margin: 6px 0;
+            line-height: 1.6;
+        }
+
+        .order-date {
+            color: #999;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .order-items-list {
+            background: #f9f9ff;
+            padding: 12px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 13px;
+            color: #333;
+        }
+
+        .order-progress {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin: 16px 0;
+            max-width: 560px;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+            position: relative;
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .progress-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #ddd;
+            color: #555;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            z-index: 1;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 19px;
+            left: calc(50% + 9px);
+            width: calc(100% - 18px);
+            height: 4px;
+            background: #ddd;
+            z-index: 0;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .progress-step.completed::before,
+        .progress-step.active::before {
+            background: #4caf50;
+            border: 2px solid white;
+        }
+
+        .progress-step.completed::after {
+            background: #4caf50;
+        }
+
+        .progress-step.active {
+            color: #333;
+        }
+
+        .status-chip {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .status-chip.confirmed {
+            background: #4caf50;
+        }
+
+        .status-chip.pending {
+            background: #ff9800;
+        }
+
+        .status-chip.not_placed,
+        .status-chip.unavailable {
+            background: #f44336;
+        }
+
+        .admin-context-menu {
+            position: fixed;
+            display: none;
+            min-width: 220px;
+            background: white;
+            border: 1px solid rgba(0,0,0,0.12);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            z-index: 9999;
+            padding: 10px;
+        }
+
+        .admin-context-menu button {
+            width: 100%;
+            border: none;
+            background: #fff;
+            text-align: left;
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s ease;
+        }
+
+        .admin-context-menu button:hover {
+            background: #f7f7f7;
+        }
+
+        .admin-action-panel {
+            display: grid;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .admin-action-panel button {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid #d0d4f2;
+            background: #f5f7ff;
+            color: #2c3e8f;
+            cursor: pointer;
+            font-size: 14px;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        .admin-action-panel button:hover {
+            transform: translateY(-1px);
+            background: #e8edff;
+        }
+
+        .admin-order-card {
+            cursor: context-menu;
+        }
+
+        /* View switching styles */
+        .mobile-view .page {
+            max-width: 100%;
+            padding: 20px 10px;
+        }
+
+        .mobile-view body {
+            font-size: 14px;
+        }
+
+        .mobile-view header {
+            padding: 15px 10px;
+        }
+
+        .mobile-view .brand h1 {
+            font-size: 24px;
+        }
+
+        .mobile-view .nav-actions {
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .mobile-view .nav-actions button {
+            width: 100%;
+            padding: 12px;
+        }
+
+        .mobile-view .products {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .mobile-view .product {
+            padding: 15px;
+        }
+
+        .mobile-view .product img {
+            height: 150px;
+        }
+
+        .mobile-view .payment-methods {
+            grid-template-columns: 1fr;
+        }
+
+        .mobile-view .form-group {
+            margin: 15px 0;
+        }
+
+        .mobile-view input, .mobile-view select {
+            padding: 14px;
+            font-size: 16px; /* Prevent zoom on iOS */
+        }
+
+        .mobile-view .home-hero,
+        .mobile-view .cart-summary,
+        .mobile-view .login-container,
+        .mobile-view .payment-form,
+        .mobile-view .success-container {
+            padding: 20px;
+        }
+
+        .desktop-view .page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .desktop-view .products {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .desktop-view .product img {
+            height: 200px;
+        }
+
+        /* Desktop view overrides for media query */
+        .desktop-view body {
+            font-size: 16px !important;
+        }
+
+        .desktop-view header {
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 18px 22px !important;
+        }
+
+        .desktop-view .brand h1 {
+            font-size: 28px !important;
+        }
+
+        .desktop-view .nav-actions {
+            flex-direction: row !important;
+            gap: 10px !important;
+            width: auto !important;
+        }
+
+        .desktop-view .nav-actions button {
+            width: auto !important;
+            padding: 10px 16px !important;
+        }
+
+        .desktop-view .products {
+            gap: 20px !important;
+        }
+
+        .desktop-view .product {
+            padding: 20px !important;
+        }
+
+        .desktop-view .payment-methods {
+            grid-template-columns: repeat(3, 1fr) !important;
+        }
+
+        .desktop-view .form-group {
+            margin: 20px 0 !important;
+        }
+
+        .desktop-view input, .desktop-view select {
+            padding: 12px !important;
+            font-size: 15px !important;
+        }
+
+        .desktop-view .home-hero,
+        .desktop-view .cart-summary,
+        .desktop-view .login-container,
+        .desktop-view .payment-form,
+        .desktop-view .success-container {
+            padding: 40px !important;
+        }
+
+        /* Responsive design */
+        @media(max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px 10px;
+            }
+
+            .brand h1 {
+                font-size: 24px;
+            }
+
+            .nav-actions {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+            }
+
+            .nav-actions button {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .page {
+                padding: 20px 10px;
+            }
+
+            .products {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 10px;
+            }
+
+            .product {
+                padding: 15px;
+            }
+
+            .product img {
+                height: 150px;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group {
+                margin: 15px 0;
+            }
+
+            input, select {
+                padding: 14px;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            .home-hero,
+            .cart-summary,
+            .login-container,
+            .payment-form,
+            .success-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="brand">
+        <h1>🛍️ StyleHub</h1>
+        <p>Premium Fashion at Your Fingertips</p>
+    </div>
+    <div class="nav-actions" aria-label="Site navigation">
+        <div class="view-switcher" id="viewSwitcher">
+            <span>View:</span>
+            <button onclick="setView('desktop')" id="desktopBtn" class="active">Desktop</button>
+            <button onclick="setView('mobile')" id="mobileBtn">Mobile</button>
+        </div>
+        <button type="button" onclick="showPage('home')">Home</button>
+        <button type="button" onclick="showPage('products')">Products</button>
+        <button type="button" onclick="showPage('cart')">Cart <span id="cartBadge">0</span></button>
+
+        <button type="button" onclick="toggleSidebar()">👤 Profile</button>
+    </div>
+</header>
+
+<aside id="sidebar" style="position:fixed; right:-300px; top:0; width:300px; height:100vh; background:white; box-shadow:-2px 0 10px rgba(0,0,0,0.1); padding:20px; overflow-y:auto; transition: right 0.3s; z-index:1000;">
+
+<h3>👤 Profile <button onclick="toggleSidebar()" style="float:right; background:none; border:none; font-size:20px; cursor:pointer;">×</button></h3>
+
+<div id="sidebarProfile"></div>
+
+<h3>📋 Recent Orders</h3>
+
+<div id="sidebarHistory"></div>
+
+</aside>
+
+<main>
+    <section id="login" class="page active" aria-labelledby="login-title">
+        <div class="login-container">
+            <h2 id="login-title">Welcome Back</h2>
+            <p class="form-note">Login to browse products, add items to your cart, and complete your order.</p>
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter username" autocomplete="username" onkeydown="if(event.key==='Enter') document.getElementById('password').focus()">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter password" autocomplete="current-password" onkeydown="if(event.key==='Enter') validateLogin()">
+                </div>
+                <button type="button" onclick="validateLogin()">Login</button>
+                <p style="font-size: 14px; margin-top: 15px;">New user? <a href="#" onclick="showCreateAccount()" style="color: #667eea;">Create Account</a></p>
+            </div>
+            <div id="createForm" style="display: none;">
+                <h2>Create New Account</h2>
+                <div class="form-group">
+                    <label for="newUsername">Username</label>
+                    <input type="text" id="newUsername" placeholder="Enter username">
+                </div>
+                <div class="form-group">
+                    <label for="newMobile">Mobile Number</label>
+                    <input type="text" id="newMobile" placeholder="Enter mobile number">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Password</label>
+                    <input type="password" id="newPassword" placeholder="Set password">
+                </div>
+                <div class="form-group">
+                    <label for="newOTP">OTP</label>
+                    <input type="text" id="newOTP" placeholder="Enter OTP">
+                </div>
+                <button type="button" onclick="sendOTPForCreate()">Send OTP</button>
+                <button type="button" onclick="createAccount()">Create Account</button>
+                <p style="font-size: 14px; margin-top: 15px;"><a href="#" onclick="showLogin()" style="color: #667eea;">Back to Login</a></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="home" class="page" aria-labelledby="home-title">
+        <div class="home-hero">
+            <h2 id="home-title">Welcome to StyleHub</h2>
+            <div style="background: #f0f4ff; padding: 20px; border-radius: 12px; margin-bottom: 20px; border-left: 4px solid #667eea;">
+                <p style="margin: 8px 0; color: #303b6d;"><strong>👤 Logged in as:</strong> <span id="loggedUserName" style="color: #667eea; font-weight: 700;"></span></p>
+                <p style="margin: 8px 0; color: #556; font-size: 14px;">Total Orders: <span id="userOrderCount" style="font-weight: 700; color: #667eea;">0</span></p>
+                <p style="margin: 8px 0; color: #556; font-size: 14px;">Last Order: <span id="lastOrderDate" style="font-weight: 700; color: #667eea;">No orders yet</span></p>
+            </div>
+            <p>Discover premium clothing and accessories curated just for you. Shop securely, track your cart, and place an order with fast checkout.</p>
+            <button type="button" onclick="showPage('profile')">👤 My Profile</button>
+            <button type="button" onclick="showPage('products')">🛒 Start Shopping</button>
+            <button type="button" class="back-button" onclick="showPage('orderHistory')">📋 View Order History</button>
+            <button type="button" class="back-button" onclick="logout()">🚪 Logout</button>
+            <p class="nav-note">Need help? Order notifications are sent after you confirm payment.</p>
+        </div>
+    </section>
+
+    <section id="profile" class="page" aria-labelledby="profile-title">
+        <div style="max-width: 600px; margin: 0 auto;">
+            <h2 class="page-title" id="profile-title">👤 My Profile</h2>
+            <div style="background: white; padding: 40px; border-radius: 18px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); text-align: center;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); width: 100px; height: 100px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; color: white; font-size: 40px; font-weight: 700;">
+                    <span id="profileInitial">U</span>
+                </div>
+                <h3 style="color: #3f51b5; font-size: 28px; margin-bottom: 10px;"><span id="profileUsername">Username</span></h3>
+                <p style="color: #556; font-size: 16px; margin-bottom: 20px;">Member since login</p>
+                
+                <div style="background: #f0f4ff; padding: 20px; border-radius: 12px; margin: 20px 0; border-left: 4px solid #667eea; text-align: left;">
+                    <p style="margin: 10px 0; color: #303b6d;\"><strong>📊 Total Orders:</strong> <span id="profileOrderCount" style="color: #667eea; font-weight: 700; font-size: 18px;">0</span></p>
+                    <p style="margin: 10px 0; color: #303b6d;\"><strong>💰 Total Spent:</strong> <span id="profileTotalSpent" style="color: #667eea; font-weight: 700; font-size: 18px;">₹0</span></p>
+                    <p style="margin: 10px 0; color: #303b6d;\"><strong>📅 Last Order:</strong> <span id="profileLastOrder" style="color: #667eea; font-weight: 700;">No orders yet</span></p>
+                </div>
+
+                <div style="margin-top: 30px; text-align: left;">
+                    <h4 style="color: #3f51b5; margin-bottom: 15px;">📋 Recent Orders</h4>
+                    <div id="profileRecentOrders" style="max-height: 300px; overflow-y: auto;"></div>
+                </div>
+
+                <div style="margin-top: 30px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
+                    <button type="button" onclick="showPage('home')" class="back-button">← Back to Home</button>
+                    <button type="button" onclick="showPage('orderHistory')">📋 Full Order History</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products" class="page" aria-labelledby="products-title">
+        <h2 class="page-title" id="products-title">�️ Shop by Category</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px;">
+            <button type="button" onclick="filterProducts('all')" class="category-btn" style="padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">👕 All Products</button>
+            <button type="button" onclick="filterProducts('mens')" class="category-btn" style="padding: 15px; background: #e3f2fd; color: #1976d2; border: 2px solid #1976d2; border-radius: 12px; font-weight: 600; cursor: pointer;">👔 Men's Fashion</button>
+            <button type="button" onclick="filterProducts('womens')" class="category-btn" style="padding: 15px; background: #fce4ec; color: #c2185b; border: 2px solid #c2185b; border-radius: 12px; font-weight: 600; cursor: pointer;">👗 Women's Fashion</button>
+            <button type="button" onclick="filterProducts('grocery')" class="category-btn" style="padding: 15px; background: #e8f5e9; color: #388e3c; border: 2px solid #388e3c; border-radius: 12px; font-weight: 600; cursor: pointer;">🛒 Grocery</button>
+            <button type="button" onclick="filterProducts('electrical')" class="category-btn" style="padding: 15px; background: #fff3e0; color: #f57c00; border: 2px solid #f57c00; border-radius: 12px; font-weight: 600; cursor: pointer;">⚡ Electrical</button>
+        </div>
+
+        <div id="mens-section" class="product-section">
+            <h2>Men's Fashion</h2>
+            <div class="products">
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop">
+                    <h3>Classic T-Shirt</h3>
+                    <p>₹499</p>
+                    <button onclick="addToCartByName('Classic T-Shirt', 499)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop">
+                    <h3>Premium Jeans</h3>
+                    <p>₹1299</p>
+                    <button onclick="addToCartByName('Premium Jeans', 1299)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1603252109303-2751441dd157?w=400&h=400&fit=crop">
+                    <h3>Leather Jacket</h3>
+                    <p>₹2499</p>
+                    <button onclick="addToCartByName('Leather Jacket', 2499)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=400&h=400&fit=crop">
+                    <h3>Formal Shirt</h3>
+                    <p>₹799</p>
+                    <button onclick="addToCartByName('Formal Shirt', 799)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1521334884684-d80222895322?w=400&h=400&fit=crop">
+                    <h3>Cozy Hoodie</h3>
+                    <p>₹1099</p>
+                    <button onclick="addToCartByName('Cozy Hoodie', 1099)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=400&h=400&fit=crop">
+                    <h3>Wool Sweater</h3>
+                    <p>₹1499</p>
+                    <button onclick="addToCartByName('Wool Sweater', 1499)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?w=400&h=400&fit=crop">
+                    <h3>Stylish Sunglasses</h3>
+                    <p>₹899</p>
+                    <button onclick="addToCartByName('Stylish Sunglasses', 899)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=400&h=400&fit=crop">
+                    <h3>White Sneakers</h3>
+                    <p>₹1599</p>
+                    <button onclick="addToCartByName('White Sneakers', 1599)">Buy Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="womens-section" class="product-section">
+            <h2>Women's Fashion</h2>
+            <div class="products">
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&h=400&fit=crop">
+                    <h3>Saree</h3>
+                    <p>₹1200</p>
+                    <button onclick="addToCartByName('Saree', 1200)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=400&h=400&fit=crop">
+                    <h3>Silk Saree</h3>
+                    <p>₹1800</p>
+                    <button onclick="addToCartByName('Silk Saree', 1800)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1603252109303-2751441dd157?w=400&h=400&fit=crop">
+                    <h3>Dress</h3>
+                    <p>₹900</p>
+                    <button onclick="addToCartByName('Dress', 900)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=400&h=400&fit=crop">
+                    <h3>Kurti</h3>
+                    <p>₹700</p>
+                    <button onclick="addToCartByName('Kurti', 700)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=400&h=400&fit=crop">
+                    <h3>Lehenga</h3>
+                    <p>₹2500</p>
+                    <button onclick="addToCartByName('Lehenga', 2500)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1520975916090-3105956dac38?w=400&h=400&fit=crop">
+                    <h3>Evening Saree</h3>
+                    <p>₹2299</p>
+                    <button onclick="addToCartByName('Evening Saree', 2299)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=400&fit=crop">
+                    <h3>Designer Saree</h3>
+                    <p>₹1899</p>
+                    <button onclick="addToCartByName('Designer Saree', 1899)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1604908177522-432e3c4f8c6d?w=400&h=400&fit=crop">
+                    <h3>Party Dress</h3>
+                    <p>₹1599</p>
+                    <button onclick="addToCartByName('Party Dress', 1599)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1590080877777-0b07b28f3e3f?w=400&h=400&fit=crop">
+                    <h3>Casual Dress</h3>
+                    <p>₹899</p>
+                    <button onclick="addToCartByName('Casual Dress', 899)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=400&fit=crop">
+                    <h3>Kurta Set</h3>
+                    <p>₹1299</p>
+                    <button onclick="addToCartByName('Kurta Set', 1299)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop">
+                    <h3>Summer Dress</h3>
+                    <p>₹649</p>
+                    <button onclick="addToCartByName('Summer Dress', 649)">Buy Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="grocery-section" class="product-section">
+            <h2>Grocery</h2>
+            <div class="products">
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&h=400&fit=crop">
+                    <h3>Rice</h3>
+                    <p>₹60/kg</p>
+                    <button onclick="addToCartByName('Rice (1kg)', 60)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1604908177522-432e3c4f8c6d?w=400&h=400&fit=crop">
+                    <h3>Dal</h3>
+                    <p>₹120/kg</p>
+                    <button onclick="addToCartByName('Dal (1kg)', 120)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1590080877777-0b07b28f3e3f?w=400&h=400&fit=crop">
+                    <h3>Wheat</h3>
+                    <p>₹40/kg</p>
+                    <button onclick="addToCartByName('Wheat (1kg)', 40)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1604908554007-3d1bb6a42199?w=400&h=400&fit=crop">
+                    <h3>Sugar</h3>
+                    <p>₹45/kg</p>
+                    <button onclick="addToCartByName('Sugar (1kg)', 45)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1587318972865-3208a0f1a58b?w=400&h=400&fit=crop">
+                    <h3>Cooking Oil</h3>
+                    <p>₹199/L</p>
+                    <button onclick="addToCartByName('Cooking Oil (1L)', 199)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1563056669-e1e7be7e1a1d?w=400&h=400&fit=crop">
+                    <h3>Milk</h3>
+                    <p>₹59/L</p>
+                    <button onclick="addToCartByName('Milk (1L)', 59)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1587049352693-86d9e48f90cd?w=400&h=400&fit=crop">
+                    <h3>Honey</h3>
+                    <p>₹229/500g</p>
+                    <button onclick="addToCartByName('Honey (500g)', 229)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1597318972865-3208a0f1a58b?w=400&h=400&fit=crop">
+                    <h3>Tea</h3>
+                    <p>₹189/500g</p>
+                    <button onclick="addToCartByName('Tea (500g)', 189)">Buy Now</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="electrical-section" class="product-section">
+            <h2>Electrical</h2>
+            <div class="products">
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1527814050087-3793815479db?w=400&h=400&fit=crop">
+                    <h3>Computer Mouse</h3>
+                    <p>₹349</p>
+                    <button onclick="addToCartByName('Computer Mouse', 349)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1587829191301-c1e42cb7b148?w=400&h=400&fit=crop">
+                    <h3>Mechanical Keyboard</h3>
+                    <p>₹2499</p>
+                    <button onclick="addToCartByName('Mechanical Keyboard', 2499)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=400&h=400&fit=crop">
+                    <h3>USB Pen Drive</h3>
+                    <p>₹449</p>
+                    <button onclick="addToCartByName('USB Pen Drive (64GB)', 449)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1625948515291-69613efd103f?w=400&h=400&fit=crop">
+                    <h3>HDMI Cable</h3>
+                    <p>₹199</p>
+                    <button onclick="addToCartByName('HDMI Cable (2m)', 199)">Buy Now</button>
+                </div>
+                <div class="product">
+                    <img src="https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=400&h=400&fit=crop">
+                    <h3>Desktop Charger</h3>
+                    <p>₹799</p>
+                    <button onclick="addToCartByName('Desktop Charger', 799)">Buy Now</button>
+                </div>
+            </div>
+        </div>
+        <div style="text-align:center; margin-top:20px;">
+            <button type="button" onclick="showPage('cart')">🛒 View Cart</button>
+            <button type="button" class="back-button" onclick="showPage('home')">← Back</button>
+        </div>
+    </section>
+
+    <section id="cart" class="page" aria-labelledby="cart-title">
+        <h2 class="page-title" id="cart-title">🛒 Your Cart</h2>
+        <div id="cartItems"></div>
+        <div class="cart-summary">
+            <h3>Total: ₹<span id="total">0</span></h3>
+            <div class="summary-actions">
+                <button type="button" onclick="showPage('address')" id="checkoutBtn">Enter Delivery Address</button>
+                <button type="button" class="back-button" onclick="showPage('products')">← Continue Shopping</button>
+            </div>
+            <p class="form-note">Orders are shared instantly with the seller once payment is confirmed.</p>
+        </div>
+    </section>
+
+    <section id="orderHistory" class="page" aria-labelledby="history-title">
+        <h2 class="page-title" id="history-title">📋 Your Order History</h2>
+        <div id="orderHistoryList"></div>
+        <div class="cart-summary">
+            <button type="button" class="back-button" onclick="showPage('home')">← Back to Home</button>
+        </div>
+    </section>
+
+    <section id="admin" class="page" aria-labelledby="admin-title">
+        <h2 class="page-title" id="admin-title">👑 Admin Dashboard</h2>
+        <div id="adminDashboard">
+            <div style="background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <h3>📊 All User Orders</h3>
+                <div id="allOrdersList"></div>
+            </div>
+        </div>
+        <div class="cart-summary">
+            <button type="button" class="back-button" onclick="logout()">🚪 Logout</button>
+        </div>
+    </section>
+
+    <section id="address" class="page" aria-labelledby="address-title">
+        <div class="cart-summary">
+            <h2 class="page-title" id="address-title">📍 Delivery Address</h2>
+            <div class="form-group">
+                <label for="customerName">Full Name</label>
+                <input type="text" id="customerName" placeholder="Enter your full name">
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">Phone Number</label>
+                <input type="tel" id="customerPhone" placeholder="Enter your phone number" maxlength="10">
+            </div>
+            <div class="form-group">
+                <label for="addressLine1">Address Line 1</label>
+                <input type="text" id="addressLine1" placeholder="House number, street name">
+            </div>
+            <div class="form-group">
+                <label for="addressLine2">Address Line 2</label>
+                <input type="text" id="addressLine2" placeholder="Apartment, landmark (optional)">
+            </div>
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" placeholder="Start typing city name..." list="cityOptions" autocomplete="off">
+                <datalist id="cityOptions">
+                    <option value="Bengaluru"></option>
+                    <option value="Mumbai"></option>
+                    <option value="Chennai"></option>
+                    <option value="Kolkata"></option>
+                    <option value="Delhi"></option>
+                    <option value="Hyderabad"></option>
+                    <option value="Pune"></option>
+                    <option value="Ahmedabad"></option>
+                    <option value="Jaipur"></option>
+                    <option value="Lucknow"></option>
+                    <option value="Kochi"></option>
+                    <option value="Visakhapatnam"></option>
+                    <option value="Surat"></option>
+                    <option value="Indore"></option>
+                    <option value="Nagpur"></option>
+                    <option value="Bhopal"></option>
+                    <option value="Vadodara"></option>
+                    <option value="Chandigarh"></option>
+                    <option value="Gurgaon"></option>
+                    <option value="Noida"></option>
+                    <option value="Ghaziabad"></option>
+                    <option value="Faridabad"></option>
+                    <option value="Srinagar"></option>
+                    <option value="Jammu"></option>
+                    <option value="Thiruvananthapuram"></option>
+                    <option value="Ranchi"></option>
+                    <option value="Patna"></option>
+                    <option value="Bhubaneswar"></option>
+                    <option value="Raipur"></option>
+                    <option value="Nashik"></option>
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="state">State</label>
+                <input type="text" id="state" placeholder="Start typing state name..." list="stateOptions" autocomplete="off">
+                <datalist id="stateOptions">
+                    <option value="Karnataka"></option>
+                    <option value="Maharashtra"></option>
+                    <option value="Tamil Nadu"></option>
+                    <option value="West Bengal"></option>
+                    <option value="Delhi"></option>
+                    <option value="Telangana"></option>
+                    <option value="Haryana"></option>
+                    <option value="Punjab"></option>
+                    <option value="Gujarat"></option>
+                    <option value="Rajasthan"></option>
+                    <option value="Uttar Pradesh"></option>
+                    <option value="Madhya Pradesh"></option>
+                    <option value="Andhra Pradesh"></option>
+                    <option value="Kerala"></option>
+                    <option value="Bihar"></option>
+                    <option value="Jharkhand"></option>
+                    <option value="Odisha"></option>
+                    <option value="Chhattisgarh"></option>
+                    <option value="Himachal Pradesh"></option>
+                    <option value="Uttarakhand"></option>
+                    <option value="Jammu and Kashmir"></option>
+                    <option value="Ladakh"></option>
+                    <option value="Tripura"></option>
+                    <option value="Assam"></option>
+                    <option value="Manipur"></option>
+                    <option value="Meghalaya"></option>
+                    <option value="Mizoram"></option>
+                    <option value="Nagaland"></option>
+                    <option value="Sikkim"></option>
+                    <option value="Goa"></option>
+                </datalist>
+            </div>
+            <div class="form-group">
+                <label for="addressPinCode">PIN Code</label>
+                <div style="display: flex; gap: 10px; align-items: flex-end;">
+                    <input type="text" id="addressPinCode" placeholder="e.g., 110001" maxlength="6" style="flex: 1; margin: 10px 0;" onkeydown="if(event.key==='Enter') lookupPinCode()">
+                    <button type="button" onclick="lookupPinCode()" style="padding: 12px 16px; margin: 10px 5px 0 0; background: #667eea; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: 600;">Auto Fill</button>
+                </div>
+                <p class="form-note" style="margin-top: 6px;">Enter a 6-digit PIN code and click "Auto Fill" to fetch city & state automatically.</p>
+            </div>
+            <button type="button" onclick="saveAddress()">Continue to Payment</button>
+            <button type="button" class="back-button" onclick="showPage('cart')">← Back to Cart</button>
+            <p class="form-note">The owner will receive your phone number and can reply with delivery updates when your product is on the way.</p>
+        </div>
+    </section>
+
+    <section id="payment" class="page" aria-labelledby="payment-title">
+        <h2 class="page-title" id="payment-title">💳 Select Payment Method</h2>
+        <div class="payment-methods">
+            <div class="payment-method" role="button" tabindex="0" onclick="selectPayment('upi', this)" onkeypress="if(event.key==='Enter') selectPayment('upi', this)">
+                <img src="https://img.icons8.com/color/96/000000/iphone.png" alt="UPI icon">
+                <p>UPI</p>
+                <small>Mobile Payment</small>
+            </div>
+            <div class="payment-method" role="button" tabindex="0" onclick="selectPayment('card', this)" onkeypress="if(event.key==='Enter') selectPayment('card', this)">
+                <img src="https://img.icons8.com/color/96/000000/credit-card.png" alt="Credit Debit Card icon">
+                <p>Credit / Debit Card</p>
+                <small>Online payment via admin account</small>
+            </div>
+            <div class="payment-method" role="button" tabindex="0" onclick="selectPayment('cash', this)" onkeypress="if(event.key==='Enter') selectPayment('cash', this)">
+                <img src="https://img.icons8.com/color/96/000000/money--v1.png" alt="Cash icon">
+                <p>Cash on Delivery</p>
+                <small>Pay at Home</small>
+            </div>
+        </div>
+
+        <div id="upiForm" class="payment-form" aria-live="polite">
+            <div class="form-group">
+                <label for="upiId">Enter your UPI ID (Google Pay / PhonePe / Paytm)</label>
+                <input type="text" id="upiId" placeholder="yourname@upi">
+            </div>
+            <p class="form-note">Enter the UPI ID you use in your app. Tap “Open UPI app” to continue payment in your UPI application.</p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center;">
+                <button type="button" onclick="openUpiApp()" style="flex:1; min-width:180px;">Open UPI app</button>
+                <button type="button" onclick="buyNow()" style="flex:1; min-width:180px;">Pay ₹<span id="payAmount">0</span></button>
+            </div>
+        </div>
+
+        <div id="cardForm" class="payment-form" aria-live="polite">
+            <div class="form-group">
+                <label for="cardNumber">Credit / Debit Card Number</label>
+                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+            </div>
+            <div class="form-group">
+                <label for="cardName">Cardholder Name</label>
+                <input type="text" id="cardName" placeholder="John Doe">
+            </div>
+            <p class="form-note">Payments are processed online and received into the StyleHub admin account.</p>
+            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                <div class="form-group" style="flex: 1; min-width: 150px;">
+                    <label for="cardExpiry">Expiry Date</label>
+                    <input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5">
+                </div>
+                <div class="form-group" style="flex: 1; min-width: 150px;">
+                    <label for="cardCVV">CVV</label>
+                    <input type="password" id="cardCVV" placeholder="123" maxlength="3">
+                </div>
+            </div>
+            <button type="button" onclick="buyNow()">Pay ₹<span id="payAmount2">0</span></button>
+        </div>
+
+        <div id="cashForm" class="payment-form" aria-live="polite">
+            <div class="form-group">
+                <label for="pinCode">Enter Your PIN Code</label>
+                <input type="text" id="pinCode" placeholder="e.g., 110001" maxlength="6">
+            </div>
+            <div class="form-group">
+                <label for="deliveryType">Select Delivery Type</label>
+                <select id="deliveryType">
+                    <option value="">-- Choose Delivery Option --</option>
+                    <option value="standard">Standard Delivery (5-7 days)</option>
+                    <option value="express">Express Delivery (2-3 days)</option>
+                    <option value="overnight">Overnight Delivery (Next day)</option>
+                </select>
+            </div>
+            <button type="button" onclick="buyNow()">Place Order - Pay ₹<span id="payAmount3">0</span> on Delivery</button>
+        </div>
+
+        <div class="message-box">Once you confirm the order, a message will be prepared for the seller via SMS or WhatsApp.</div>
+        <button type="button" class="back-button" onclick="showPage('cart')">← Back to Cart</button>
+    </section>
+
+    <section id="success" class="page" aria-labelledby="success-title">
+        <div class="success-container">
+            <div class="success-icon">✅</div>
+            <h2 id="success-title">Order Placed Successfully!</h2>
+            <p id="orderMessage">Thank you for shopping with StyleHub. Your order has been confirmed.</p>
+            <p id="orderDetails"></p>
+            <button type="button" onclick="goHome()">Continue Shopping</button>
+            <div class="summary-actions">
+                <button type="button" class="back-button" onclick="sendWhatsApp()">Send WhatsApp Again</button>
+                <button type="button" class="back-button" onclick="sendSms()">Send SMS Again</button>
+            </div>
+            <p class="form-note">The seller can reply to your phone to let you know when the product will reach you.</p>
+        </div>
+    </section>
+</main>
+
+<div id="adminContextMenu" class="admin-context-menu" aria-hidden="true"></div>
+
+<script>
+    const SHOP_NUMBER = '7019054349';
+    const WHATSAPP_NUMBER = '917019054349';
+    const ADMIN_UPI_ID = 'pranam-g@fam';
+    let cart = [];
+    let total = 0;
+    let selectedPayment = '';
+    let addressSaved = false;
+    let addressInfo = {};
+    let lastOrderMessage = '';
+    let lastSmsMessage = '';
+    let currentUser = null;
+    let allOrders = {};
+    let currentFilter = 'all';
+    let expectedOTP = null;
+    let users = {};
+    let expectedOTPForCreate = null;
+    let adminContextTarget = null;
+    let currentView = 'desktop'; // 'desktop' or 'mobile'
+
+    const pinCodeDatabase = {
+        '110001': { city: 'Delhi', state: 'Delhi' },
+        '110002': { city: 'Delhi', state: 'Delhi' },
+        '560001': { city: 'Bengaluru', state: 'Karnataka' },
+        '560034': { city: 'Bengaluru', state: 'Karnataka' },
+        '560070': { city: 'Bengaluru', state: 'Karnataka' },
+        '560075': { city: 'Bengaluru', state: 'Karnataka' },
+        '560076': { city: 'Bengaluru', state: 'Karnataka' },
+        '400001': { city: 'Mumbai', state: 'Maharashtra' },
+        '400051': { city: 'Mumbai', state: 'Maharashtra' },
+        '600001': { city: 'Chennai', state: 'Tamil Nadu' },
+        '600028': { city: 'Chennai', state: 'Tamil Nadu' },
+        '700001': { city: 'Kolkata', state: 'West Bengal' },
+        '700027': { city: 'Kolkata', state: 'West Bengal' },
+        '500001': { city: 'Hyderabad', state: 'Telangana' },
+        '500032': { city: 'Hyderabad', state: 'Telangana' },
+        '411001': { city: 'Pune', state: 'Maharashtra' },
+        '411004': { city: 'Pune', state: 'Maharashtra' },
+        '380001': { city: 'Ahmedabad', state: 'Gujarat' },
+        '380015': { city: 'Ahmedabad', state: 'Gujarat' },
+        '302001': { city: 'Jaipur', state: 'Rajasthan' },
+        '302015': { city: 'Jaipur', state: 'Rajasthan' },
+        '226001': { city: 'Lucknow', state: 'Uttar Pradesh' },
+        '226024': { city: 'Lucknow', state: 'Uttar Pradesh' },
+        '682001': { city: 'Kochi', state: 'Kerala' },
+        '682011': { city: 'Kochi', state: 'Kerala' },
+        '530001': { city: 'Visakhapatnam', state: 'Andhra Pradesh' },
+        '530002': { city: 'Visakhapatnam', state: 'Andhra Pradesh' },
+        '395001': { city: 'Surat', state: 'Gujarat' },
+        '395007': { city: 'Surat', state: 'Gujarat' },
+        '452001': { city: 'Indore', state: 'Madhya Pradesh' },
+        '452002': { city: 'Indore', state: 'Madhya Pradesh' },
+        '440001': { city: 'Nagpur', state: 'Maharashtra' },
+        '440010': { city: 'Nagpur', state: 'Maharashtra' }
+    };
+
+    const products = [
+        { name: 'Classic T-Shirt', price: 499, category: 'mens', image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&h=600&fit=crop' },
+        { name: 'Premium Jeans', price: 1299, category: 'mens', image: 'https://images.unsplash.com/photo-1583391733956-6c78276477e2?w=600&h=600&fit=crop' },
+        { name: 'Leather Jacket', price: 2499, category: 'mens', image: 'https://images.unsplash.com/photo-1603252109303-2751441dd157?w=600&h=600&fit=crop' },
+        { name: 'Formal Shirt', price: 799, category: 'mens', image: 'https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=600&h=600&fit=crop' },
+        { name: 'Cozy Hoodie', price: 1099, category: 'mens', image: 'https://images.unsplash.com/photo-1521334884684-d80222895322?w=600&h=600&fit=crop' },
+        { name: 'Wool Sweater', price: 1499, category: 'mens', image: 'https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&h=600&fit=crop' },
+        { name: 'Women Evening Saree', price: 2299, category: 'womens', image: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?w=600&h=600&fit=crop' },
+        { name: 'Women Designer Saree', price: 1899, category: 'womens', image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=600&h=600&fit=crop' },
+        { name: 'Women Party Dress', price: 1599, category: 'womens', image: 'https://images.unsplash.com/photo-1604908177522-432e3c4f8c6d?w=600&h=600&fit=crop' },
+        { name: 'Women Casual Dress', price: 899, category: 'womens', image: 'https://images.unsplash.com/photo-1590080877777-0b07b28f3e3f?w=600&h=600&fit=crop' },
+        { name: 'Women Kurti', price: 749, category: 'womens', image: 'https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=600&h=600&fit=crop' },
+        { name: 'Women Kurta Set', price: 1299, category: 'womens', image: 'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&h=600&fit=crop' },
+        { name: 'Women Summer Dress', price: 649, category: 'womens', image: 'https://images.unsplash.com/photo-1495995424756-f90d4c4b4412?w=600&h=600&fit=crop' },
+        { name: 'Women Jacket', price: 1999, category: 'womens', image: 'https://images.unsplash.com/photo-1520713185298-1b434c919eba?w=600&h=600&fit=crop' },
+
+        { name: 'Silk Saree', price: 3499, category: 'womens', image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&h=600&fit=crop' },
+
+        { name: 'Soft Silk Saree', price: 2999, category: 'womens', image: 'https://images.unsplash.com/photo-1590080876-a370a6b6d63c?w=600&h=600&fit=crop' },
+
+        { name: 'Traditional Saree', price: 2499, category: 'womens', image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&h=600&fit=crop' },
+
+        { name: 'Embroidered Saree', price: 3999, category: 'womens', image: 'https://images.unsplash.com/photo-1590080876-a370a6b6d63c?w=600&h=600&fit=crop' },
+
+        { name: 'Banarasi Saree', price: 4999, category: 'womens', image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=600&h=600&fit=crop' },
+        { name: 'Stylish Sunglasses', price: 899, category: 'mens', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=600&h=600&fit=crop' },
+        { name: 'White Sneakers', price: 1599, category: 'mens', image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=600&h=600&fit=crop' },
+        { name: 'Organic Basmati Rice (5kg)', price: 449, category: 'grocery', image: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=600&h=600&fit=crop' },
+        { name: 'Rock Salt (1kg)', price: 89, category: 'grocery', image: 'https://images.unsplash.com/photo-1599599810694-b5ac4dd70ecf?w=600&h=600&fit=crop' },
+        { name: 'Cooking Oil (1L)', price: 199, category: 'grocery', image: 'https://images.unsplash.com/photo-1587318972865-3208a0f1a58b?w=600&h=600&fit=crop' },
+        { name: 'White Sugar (1kg)', price: 59, category: 'grocery', image: 'https://images.unsplash.com/photo-1599599810694-b5ac4dd70ecf?w=600&h=600&fit=crop' },
+        { name: 'Digestive Biscuits (400g)', price: 129, category: 'grocery', image: 'https://images.unsplash.com/photo-1595521624137-e8ccfb7db8b9?w=600&h=600&fit=crop' },
+        { name: 'Whole Wheat Flour (2kg)', price: 149, category: 'grocery', image: 'https://images.unsplash.com/photo-1585707032515-6d1dd76e6a3e?w=600&h=600&fit=crop' },
+        { name: 'Milk (1L)', price: 59, category: 'grocery', image: 'https://images.unsplash.com/photo-1563056669-e1e7be7e1a1d?w=600&h=600&fit=crop' },
+        { name: 'Honey (500g)', price: 229, category: 'grocery', image: 'https://images.unsplash.com/photo-1587049352693-86d9e48f90cd?w=600&h=600&fit=crop' },
+        { name: 'Tea (500g)', price: 189, category: 'grocery', image: 'https://images.unsplash.com/photo-1597318972865-3208a0f1a58b?w=600&h=600&fit=crop' },
+        { name: 'Computer Mouse', price: 349, category: 'electrical', image: 'https://images.unsplash.com/photo-1527814050087-3793815479db?w=600&h=600&fit=crop' },
+        { name: 'Mechanical Keyboard', price: 2499, category: 'electrical', image: 'https://images.unsplash.com/photo-1587829191301-c1e42cb7b148?w=600&h=600&fit=crop' },
+        { name: 'USB Pen Drive (64GB)', price: 449, category: 'electrical', image: 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=600&h=600&fit=crop' },
+        { name: 'HDMI Cable (2m)', price: 199, category: 'electrical', image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=600&h=600&fit=crop' },
+        { name: 'USB Type-C Cable', price: 249, category: 'electrical', image: 'https://images.unsplash.com/photo-1625948515291-69613efd103f?w=600&h=600&fit=crop' },
+        { name: 'Desktop Charger', price: 799, category: 'electrical', image: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=600&h=600&fit=crop' },
+    ];
+
+    function init() {
+        loadOrdersFromStorage();
+        loadUsersFromStorage();
+        updateCartBadge();
+        document.getElementById('payAmount').innerText = total;
+        document.getElementById('payAmount2').innerText = total;
+        document.getElementById('payAmount3').innerText = total;
+        
+        // Detect device and set initial view
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const savedView = localStorage.getItem('stylehubView');
+        
+        // Always show view switcher
+        document.getElementById('viewSwitcher').style.display = 'flex';
+        
+        if (isMobile) {
+            setView(savedView || 'mobile'); // Default to mobile view on mobile devices, or saved preference
+        } else {
+            setView(savedView || 'desktop'); // Desktop view on desktop/laptop, or saved preference
+        }
+    }
+
+    function setView(view) {
+        currentView = view;
+        document.body.classList.remove('desktop-view', 'mobile-view');
+        document.body.classList.add(view + '-view');
+        
+        // Update button states
+        document.getElementById('desktopBtn').classList.toggle('active', view === 'desktop');
+        document.getElementById('mobileBtn').classList.toggle('active', view === 'mobile');
+        
+        // Save preference
+        localStorage.setItem('stylehubView', view);
+    }
+
+    function toggleSidebar() {
+
+        const sidebar = document.getElementById('sidebar');
+
+        sidebar.style.right = sidebar.style.right === '0px' ? '-300px' : '0px';
+
+        if (currentUser) {
+
+            const userOrders = allOrders[currentUser] || [];
+
+            let totalSpent = 0;
+
+            userOrders.forEach(order => {
+
+                totalSpent += order.total;
+
+            });
+
+            document.getElementById('sidebarProfile').innerHTML = `
+
+                <p><strong>${currentUser}</strong></p>
+
+                <p>Total Orders: ${userOrders.length}</p>
+
+                <p>Total Spent: ₹${totalSpent}</p>
+
+                <p>Last Order: ${userOrders.length > 0 ? new Date(userOrders[userOrders.length - 1].timestamp).toLocaleDateString('en-IN') : 'No orders yet'}</p>
+
+            `;
+
+            document.getElementById('sidebarHistory').innerHTML = userOrders.slice(-5).reverse().map(order => `
+
+                <div style="border-bottom:1px solid #eee; padding:10px 0;">
+
+                    <p>${order.items.map(item => item.name).join(', ')}</p>
+
+                    <p>₹${order.total} - ${new Date(order.timestamp).toLocaleDateString('en-IN')}</p>
+
+                </div>
+
+            `).join('') || '<p>No orders yet.</p>';
+
+        }
+
+    }
+
+    function filterProducts(category) {
+        currentFilter = category;
+        document.querySelectorAll('.product-section').forEach(sec => sec.style.display = 'none');
+        if (category === 'all') {
+            document.querySelectorAll('.product-section').forEach(sec => sec.style.display = 'block');
+        } else {
+            document.getElementById(category + '-section').style.display = 'block';
+        }
+    }
+
+    function displayUserProfile() {
+        if (currentUser) {
+            document.getElementById('loggedUserName').innerText = currentUser;
+            const userOrders = allOrders[currentUser] || [];
+            document.getElementById('userOrderCount').innerText = userOrders.length;
+            if (userOrders.length > 0) {
+                const lastOrder = userOrders[userOrders.length - 1];
+                const orderDate = new Date(lastOrder.timestamp).toLocaleDateString('en-IN');
+                document.getElementById('lastOrderDate').innerText = orderDate;
+            } else {
+                document.getElementById('lastOrderDate').innerText = 'No orders yet';
+            }
+        }
+    }
+
+    function displayProfile() {
+        if (currentUser) {
+            document.getElementById('profileUsername').innerText = currentUser;
+            document.getElementById('profileInitial').innerText = currentUser.charAt(0).toUpperCase();
+            
+            const userOrders = allOrders[currentUser] || [];
+            document.getElementById('profileOrderCount').innerText = userOrders.length;
+            
+            let totalSpent = 0;
+            userOrders.forEach(order => {
+                totalSpent += order.total;
+            });
+            document.getElementById('profileTotalSpent').innerText = '₹' + totalSpent;
+            
+            if (userOrders.length > 0) {
+                const lastOrder = userOrders[userOrders.length - 1];
+                const orderDate = new Date(lastOrder.timestamp).toLocaleDateString('en-IN');
+                document.getElementById('profileLastOrder').innerText = orderDate;
+                
+                const recentDiv = document.getElementById('profileRecentOrders');
+                recentDiv.innerHTML = userOrders.slice(-3).reverse().map((order, idx) => {
+                    const itemsHtml = order.items.map((item, i) => `${i + 1}. ${item.name}`).join(', ');
+                    return `
+                        <div style="background: #f9f9ff; padding: 12px; margin: 8px 0; border-radius: 8px; border-left: 3px solid #667eea;">
+                            <p style="margin: 4px 0; color: #303b6d; font-weight: 600;">Order: ${itemsHtml}</p>
+                            <p style="margin: 4px 0; color: #556; font-size: 13px;">₹${order.total} - ${new Date(order.timestamp).toLocaleDateString('en-IN')}</p>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                document.getElementById('profileRecentOrders').innerHTML = '<p style="color: #667eea;">No orders yet. Start shopping!</p>';
+            }
+        }
+    }
+
+    function lookupPinCode() {
+        const pinCode = document.getElementById('addressPinCode').value.trim();
+        if (pinCode.length === 6 && pinCodeDatabase[pinCode]) {
+            const location = pinCodeDatabase[pinCode];
+            document.getElementById('city').value = location.city;
+            document.getElementById('state').value = location.state;
+            alert(`✓ Location found: ${location.city}, ${location.state}`);
+        } else if (pinCode.length === 6) {
+            alert('PIN code not found in database. Please enter manually.');
+        }
+    }
+
+    function loadOrdersFromStorage() {
+        const saved = localStorage.getItem('stylehubOrders');
+        if (saved) {
+            allOrders = JSON.parse(saved);
+            for (const user in allOrders) {
+                allOrders[user].forEach(order => {
+                    if (!order.stage1) {
+                        order.stage1 = 'pending';
+                    }
+                    if (!order.stage2) {
+                        order.stage2 = 'pending';
+                    }
+                    if (!order.stage3) {
+                        order.stage3 = 'pending';
+                    }
+                    if (!order.adminNote) {
+                        order.adminNote = '';
+                    }
+                });
+            }
+        }
+    }
+
+    function saveOrdersToStorage() {
+        localStorage.setItem('stylehubOrders', JSON.stringify(allOrders));
+    }
+
+    function loadUsersFromStorage() {
+        const saved = localStorage.getItem('stylehubUsers');
+        if (saved) {
+            users = JSON.parse(saved);
+        }
+    }
+
+    function saveUsersToStorage() {
+        localStorage.setItem('stylehubUsers', JSON.stringify(users));
+    }
+
+    function sendOTP() {
+        const mobile = document.getElementById('username').value.trim();
+        if (!mobile) {
+            alert('Please enter mobile number first.');
+            return;
+        }
+        if (mobile === 'Admin') {
+            alert('Admin login does not require OTP. Enter password directly.');
+            return;
+        }
+        // Check if mobile is registered
+        let registered = false;
+        for (let u in users) {
+            if (users[u].mobile === mobile) {
+                registered = true;
+                break;
+            }
+        }
+        if (!registered) {
+            alert('Mobile number not registered. Please create an account first.');
+            return;
+        }
+        // Simulate sending OTP
+        expectedOTP = prompt('Simulated OTP sent to ' + mobile + '. Enter the OTP:');
+        if (expectedOTP) {
+            alert('OTP sent! Please enter the OTP to login.');
+        }
+    }
+
+    function validateLogin() {
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!username || !password) {
+            alert('Please enter both username and password.');
+            return;
+        }
+
+        if (username === 'Admin' && password === 'Admin@123') {
+            currentUser = 'admin';
+            showPage('admin');
+            displayAllOrders();
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            return;
+        }
+
+        if (users[username] && users[username].password === password) {
+            currentUser = username;
+            if (!allOrders[username]) {
+                allOrders[username] = [];
+                saveOrdersToStorage();
+            }
+            displayUserProfile();
+            showPage('home');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        } else {
+            alert('Invalid username or password.');
+        }
+    }
+
+    function showCreateAccount() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('createForm').style.display = 'block';
+    }
+
+    function showLogin() {
+        document.getElementById('createForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'block';
+    }
+
+    function sendOTPForCreate() {
+        const mobile = document.getElementById('newMobile').value.trim();
+        if (!mobile) {
+            alert('Please enter mobile number first.');
+            return;
+        }
+        // Simulate sending OTP
+        expectedOTPForCreate = prompt('Simulated OTP sent to ' + mobile + '. Enter the OTP:');
+        if (expectedOTPForCreate) {
+            alert('OTP sent! Please enter the OTP to create account.');
+        }
+    }
+
+    function createAccount() {
+        const username = document.getElementById('newUsername').value.trim();
+        const mobile = document.getElementById('newMobile').value.trim();
+        const password = document.getElementById('newPassword').value.trim();
+        const otp = document.getElementById('newOTP').value.trim();
+
+        if (!username || !mobile || !password || !otp) {
+            alert('Please fill all fields.');
+            return;
+        }
+
+        if (users[username]) {
+            alert('Username already exists.');
+            return;
+        }
+
+        if (otp !== expectedOTPForCreate) {
+            alert('Invalid OTP.');
+            return;
+        }
+
+        users[username] = { password: password, mobile: mobile };
+        saveUsersToStorage();
+
+        alert('Account created successfully! Please login.');
+        showLogin();
+        document.getElementById('newUsername').value = '';
+        document.getElementById('newMobile').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('newOTP').value = '';
+        expectedOTPForCreate = null;
+    }
+
+    function logout() {
+        currentUser = null;
+        cart = [];
+        total = 0;
+        selectedPayment = '';
+        addressSaved = false;
+        addressInfo = {};
+        updateCartBadge();
+        document.getElementById('total').innerText = '0';
+        showPage('login');
+        alert('You have been logged out.');
+    }
+
+    function showPage(pageId) {
+        if (pageId === 'payment' && !addressSaved) {
+            alert('Please enter your delivery address before payment.');
+            pageId = 'address';
+        }
+
+        document.querySelectorAll('.page').forEach((section) => {
+            section.classList.remove('active');
+        });
+        document.getElementById(pageId).classList.add('active');
+
+        if (pageId === 'cart') {
+            loadCart();
+        }
+        if (pageId === 'payment') {
+            resetPaymentSelection();
+        }
+        if (pageId === 'products') {
+            updateCartBadge();
+            filterProducts('all');
+        }
+        if (pageId === 'orderHistory') {
+            displayOrderHistory();
+        }
+        if (pageId === 'home') {
+            displayUserProfile();
+        }
+        if (pageId === 'profile') {
+            displayProfile();
+        }
+    }
+
+    function displayOrderHistory() {
+        const historyDiv = document.getElementById('orderHistoryList');
+        historyDiv.innerHTML = '';
+
+        if (!currentUser || !allOrders[currentUser] || allOrders[currentUser].length === 0) {
+            historyDiv.innerHTML = `<div class="cart-summary" style="max-width: 600px; margin: 40px auto;">
+                <p style="color: #667eea; font-size: 18px;">No previous orders found. Start shopping!</p>
+            </div>`;
+            return;
+        }
+
+        allOrders[currentUser].forEach((order, idx) => {
+            const itemsHtml = order.items.map((item, i) => `${i + 1}. ${item.name} - ₹${item.price}`).join('<br>');
+            const orderHtml = `
+                <div class="order-history-item">
+                    <h4>Order #${allOrders[currentUser].length - idx} <span class="status-chip ${getOrderBadgeClass(order)}">${getStatusLabel(order)}</span></h4>
+                    ${renderOrderProgress(order)}
+                    <div class="order-items-list">${itemsHtml}</div>
+                    <p><strong>Total Amount:</strong> ₹${order.total}</p>
+                    <p><strong>Delivery Address:</strong><br>${order.address.name}<br>${order.address.addressLine1}${order.address.addressLine2 ? ', ' + order.address.addressLine2 : ''}<br>${order.address.city}, ${order.address.state} - ${order.address.pin}</p>
+                    <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+                    <p class="order-date">Ordered on: ${new Date(order.timestamp).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                </div>
+            `;
+            historyDiv.innerHTML += orderHtml;
+        });
+    }
+
+    function displayAllOrders() {
+        const allOrdersDiv = document.getElementById('allOrdersList');
+        allOrdersDiv.innerHTML = '';
+
+        let hasOrders = false;
+        for (const user in allOrders) {
+            if (allOrders[user].length > 0) {
+                hasOrders = true;
+                allOrders[user].forEach((order, idx) => {
+                    const itemsHtml = order.items.map((item, i) => `${i + 1}. ${item.name} - ₹${item.price}`).join('<br>');
+                    const orderIndex = idx;
+                    const orderHtml = `
+                        <div class="order-history-item admin-order-card" style="border: 1px solid #ddd; padding: 15px; margin-bottom: 15px; border-radius: 8px;">
+                            <h4>User: ${user} - Order #${allOrders[user].length - idx} <span class="status-chip ${getOrderBadgeClass(order)}">${getStatusLabel(order)}</span></h4>
+                            ${renderOrderProgress(order)}
+                            <div class="order-items-list">${itemsHtml}</div>
+                            <p><strong>Total Amount:</strong> ₹${order.total}</p>
+                            <p><strong>Delivery Address:</strong><br>${order.address.name}, ${order.address.phone}<br>${order.address.addressLine1}${order.address.addressLine2 ? ', ' + order.address.addressLine2 : ''}<br>${order.address.city}, ${order.address.state} - ${order.address.pin}</p>
+                            <p><strong>Payment Method:</strong> ${order.paymentMethod}</p>
+                            <div class="admin-action-panel">${getAdminActionButtons(order, user, orderIndex)}</div>
+                            <p class="order-date">Ordered on: ${new Date(order.timestamp).toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                        </div>
+                    `;
+                    allOrdersDiv.innerHTML += orderHtml;
+                });
+            }
+        }
+
+        if (!hasOrders) {
+            allOrdersDiv.innerHTML = `<p style="color: #667eea; font-size: 18px;">No orders from any users yet.</p>`;
+        }
+    }
+
+    function getStatusLabel(order) {
+        if (order.stage3 === 'delivered') return 'Order delivered successfully';
+        if (order.stage3 === 'cancelled') return 'Order canceled. Refund processing';
+        if (order.stage2 === 'store') return 'Order arrived at store';
+        if (order.stage2 === 'delivery') return 'Product taken by delivery man';
+        if (order.stage1 === 'placed') return 'Order placed, waiting store/delivery update';
+        if (order.stage1 === 'not_placed') return 'Order not placed';
+        return 'Awaiting order confirmation';
+    }
+
+    function getOrderBadgeClass(order) {
+        if (order.stage3 === 'delivered') return 'confirmed';
+        if (order.stage3 === 'cancelled') return 'not_placed';
+        if (order.stage1 === 'not_placed') return 'not_placed';
+        return 'pending';
+    }
+
+    function getAdminActionButtons(order, username, orderIndex) {
+        const deleteButton = `<button type="button" onclick="deleteCustomer('${username}')" style="background:#f44336;color:#fff; margin-top:12px;">🗑️ Delete customer account and history</button>`;
+
+        if (order.stage3 !== 'pending') {
+            return `<div style="margin-top: 12px; color:#333;"><strong>Final status:</strong> ${getStatusLabel(order)}</div>${deleteButton}`;
+        }
+
+        if (order.stage1 === 'pending') {
+            return `
+                <button type="button" onclick="adminContextUpdate('stage1', '${username}', ${orderIndex}, 'placed')">✔ Your order is placed</button>
+                <button type="button" onclick="adminContextUpdate('stage1', '${username}', ${orderIndex}, 'not_placed')">❌ Your order is not placed</button>
+                ${deleteButton}
+            `;
+        }
+
+        if (order.stage1 === 'placed' && order.stage2 === 'pending') {
+            return `
+                <button type="button" onclick="adminContextUpdate('stage2', '${username}', ${orderIndex}, 'store')">📦 Your order came to store</button>
+                <button type="button" onclick="adminContextUpdate('stage2', '${username}', ${orderIndex}, 'delivery')">🚚 Product taken by delivery man</button>
+                ${deleteButton}
+            `;
+        }
+
+        if (order.stage2 !== 'pending' && order.stage3 === 'pending') {
+            return `
+                <button type="button" onclick="adminContextUpdate('stage3', '${username}', ${orderIndex}, 'delivered')">✔ Your order is successfully completed</button>
+                <button type="button" onclick="adminContextUpdate('stage3', '${username}', ${orderIndex}, 'cancelled')">⚠ Due to some reason order is canceled; payment will be refunded in 7 working days</button>
+                ${deleteButton}
+            `;
+        }
+
+        return `${deleteButton}`;
+    }
+
+    function renderOrderProgress(order) {
+        const step1Class = order.stage1 === 'pending' ? 'active' : 'completed';
+        const step2Class = order.stage1 === 'placed' ? (order.stage2 === 'pending' ? 'active' : 'completed') : '';
+        const step3Class = order.stage2 !== 'pending' ? (order.stage3 === 'pending' ? 'active' : 'completed') : '';
+        const step1Label = order.stage1 === 'placed' ? 'Your order is placed' : order.stage1 === 'not_placed' ? 'Your order is not placed' : 'Choose order status';
+        const step2Label = order.stage1 !== 'placed' ? 'Waiting to place order' : order.stage2 === 'pending' ? 'Order at store or with delivery' : order.stage2 === 'store' ? 'Order arrived at store' : 'Taken by delivery man';
+        const step3Label = order.stage2 === 'pending' ? 'Waiting final result' : order.stage3 === 'pending' ? 'Complete or refund' : order.stage3 === 'delivered' ? 'Order completed' : 'Refund initiated';
+        return `
+            <div class="order-progress">
+                <div class="progress-step ${step1Class}" data-step="1">
+                    <span>Order Status</span>
+                    <small>${step1Label}</small>
+                </div>
+                <div class="progress-step ${step2Class}" data-step="2">
+                    <span>Store / Delivery</span>
+                    <small>${step2Label}</small>
+                </div>
+                <div class="progress-step ${step3Class}" data-step="3">
+                    <span>Final Outcome</span>
+                    <small>${step3Label}</small>
+                </div>
+            </div>
+        `;
+    }
+
+    function updateOrderStatus(username, orderIndex, type, value) {
+        if (!allOrders[username] || !allOrders[username][orderIndex]) return;
+        const order = allOrders[username][orderIndex];
+        if (type === 'stage1') {
+            order.stage1 = value;
+        } else if (type === 'stage2') {
+            order.stage2 = value;
+        } else if (type === 'stage3') {
+            order.stage3 = value;
+        } else {
+            return;
+        }
+        saveOrdersToStorage();
+        displayAllOrders();
+        if (currentUser === username) {
+            displayOrderHistory();
+        }
+        hideAdminContextMenu();
+    }
+
+    function deleteCustomer(username) {
+        if (!confirm(`Delete ${username}'s account and order history permanently?`)) {
+            return;
+        }
+        delete users[username];
+        delete allOrders[username];
+        saveUsersToStorage();
+        saveOrdersToStorage();
+        if (currentUser === username) {
+            logout();
+        }
+        displayAllOrders();
+        hideAdminContextMenu();
+        alert(`Customer ${username} and their order history have been deleted. They can now create a new account.`);
+    }
+
+    function playOrderSuccessAudio() {
+        const playVoice = () => {
+            if (!('speechSynthesis' in window)) return;
+            const msg = new SpeechSynthesisUtterance('Your order has been placed successfully. Thank you for using Style Hub.');
+            msg.lang = 'en-US';
+            msg.rate = 1;
+            msg.pitch = 1.15;
+            const voices = window.speechSynthesis.getVoices();
+            const femaleVoice = voices.find((v) => /female|woman|zira|samantha|alloy/i.test(v.name));
+            if (femaleVoice) {
+                msg.voice = femaleVoice;
+            } else if (voices.length > 0) {
+                msg.voice = voices.find((v) => v.lang.startsWith('en')) || voices[0];
+            }
+            window.speechSynthesis.cancel();
+            window.speechSynthesis.speak(msg);
+        };
+
+        const startAudio = () => {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const notes = [392, 523.25, 659.25, 783.99];
+                let start = audioCtx.currentTime;
+                notes.forEach((freq) => {
+                    const oscillator = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    oscillator.frequency.value = freq;
+                    oscillator.type = 'triangle';
+                    oscillator.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    gain.gain.setValueAtTime(0.001, start);
+                    gain.gain.exponentialRampToValueAtTime(0.14, start + 0.04);
+                    gain.gain.exponentialRampToValueAtTime(0.001, start + 0.3);
+                    oscillator.start(start);
+                    oscillator.stop(start + 0.3);
+                    start += 0.32;
+                });
+                const totalDurationMs = Math.ceil((notes.length * 0.32 + 0.1) * 1000);
+                setTimeout(playVoice, totalDurationMs);
+            } catch (error) {
+                console.warn('Audio playback not supported:', error);
+                playVoice();
+            }
+        };
+
+        if ('speechSynthesis' in window) {
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length === 0) {
+                window.speechSynthesis.onvoiceschanged = startAudio;
+            } else {
+                startAudio();
+            }
+        } else {
+            startAudio();
+        }
+    }
+
+    function showAdminContextMenu(event, username, orderIndex) {
+        event.preventDefault();
+        adminContextTarget = { username, orderIndex };
+        const menu = document.getElementById('adminContextMenu');
+        const order = allOrders[username] && allOrders[username][orderIndex];
+        if (!order) return;
+        menu.innerHTML = getAdminActionButtons(order, username, orderIndex);
+        menu.style.left = `${event.pageX}px`;
+        menu.style.top = `${event.pageY}px`;
+        menu.style.display = 'block';
+    }
+
+    function hideAdminContextMenu() {
+        const menu = document.getElementById('adminContextMenu');
+        menu.style.display = 'none';
+        adminContextTarget = null;
+    }
+
+    function adminContextUpdate(type, username, orderIndex, value) {
+        if (type === 'stage1' || type === 'stage2' || type === 'stage3') {
+            updateOrderStatus(username, orderIndex, type, value);
+        }
+    }
+
+    document.addEventListener('click', hideAdminContextMenu);
+    document.addEventListener('scroll', hideAdminContextMenu);
+    document.getElementById('adminContextMenu').addEventListener('click', (event) => event.stopPropagation());
+
+    function saveAddress() {
+        const name = document.getElementById('customerName').value.trim();
+        const phone = document.getElementById('customerPhone').value.trim();
+        const addressLine1 = document.getElementById('addressLine1').value.trim();
+        const addressLine2 = document.getElementById('addressLine2').value.trim();
+        const city = document.getElementById('city').value.trim();
+        const state = document.getElementById('state').value.trim();
+        const pin = document.getElementById('addressPinCode').value.trim();
+
+        if (!name || !phone || !addressLine1 || !city || !state || !pin) {
+            alert('Please fill in all required delivery address fields.');
+            return;
+        }
+        if (!/^\d{10}$/.test(phone)) {
+            alert('Please enter a valid 10-digit phone number.');
+            return;
+        }
+        if (!/^\d{6}$/.test(pin)) {
+            alert('Please enter a valid 6-digit PIN code.');
+            return;
+        }
+
+        addressInfo = {
+            name,
+            phone,
+            addressLine1,
+            addressLine2,
+            city,
+            state,
+            pin,
+        };
+        addressSaved = true;
+        showPage('payment');
+    }
+
+    function renderProducts() {
+        const productList = document.getElementById('productList');
+        const filteredProducts = currentFilter === 'all' ? products : products.filter(p => p.category === currentFilter);
+        productList.innerHTML = filteredProducts.map((product, index) => {
+            const actualIndex = products.indexOf(product);
+            return `
+                <article class="product">
+                    <img src="${product.image}" alt="${product.name}">
+                    <div>
+                        <h3>${product.name}</h3>
+                        <p>₹${product.price}</p>
+                        <button type="button" onclick="addToCart(${actualIndex})">Add to Cart</button>
+                    </div>
+                </article>
+            `;
+        }).join('');
+    }
+
+    function addToCart(index) {
+        cart.push(products[index]);
+        total += products[index].price;
+        updateCartBadge();
+        alert(`✓ ${products[index].name} added to cart.`);
+        document.getElementById('total').innerText = total;
+        document.getElementById('checkoutBtn').disabled = false;
+    }
+
+    function addToCartByName(name, price) {
+        const product = { name: name, price: price };
+        cart.push(product);
+        total += price;
+        updateCartBadge();
+        alert(`✓ ${name} added to cart.`);
+        document.getElementById('total').innerText = total;
+        document.getElementById('checkoutBtn').disabled = false;
+    }
+
+    function updateCartBadge() {
+        document.getElementById('cartBadge').innerText = cart.length;
+    }
+
+    function loadCart() {
+        const cartDiv = document.getElementById('cartItems');
+        cartDiv.innerHTML = '';
+
+        if (cart.length === 0) {
+            cartDiv.innerHTML = '<p style="color: #667eea; font-size: 18px;">Your cart is empty. Add products to continue.</p>';
+            document.getElementById('checkoutBtn').disabled = true;
+            document.getElementById('total').innerText = '0';
+            return;
+        }
+
+        cart.forEach((item, index) => {
+            cartDiv.innerHTML += `
+                <div class="cart-item">
+                    <div>
+                        <strong>${item.name}</strong>
+                        <span>₹${item.price}</span>
+                    </div>
+                    <button type="button" onclick="removeFromCart(${index})" aria-label="Remove ${item.name} from cart">Remove</button>
+                </div>
+            `;
+        });
+
+        document.getElementById('total').innerText = total;
+        document.getElementById('checkoutBtn').disabled = false;
+    }
+
+    function removeFromCart(index) {
+        if (index >= 0 && index < cart.length) {
+            total -= cart[index].price;
+            cart.splice(index, 1);
+            updateCartBadge();
+            loadCart();
+        }
+    }
+
+    function resetPaymentSelection() {
+        selectedPayment = '';
+        document.querySelectorAll('.payment-method').forEach((item) => item.classList.remove('selected'));
+        document.querySelectorAll('.payment-form').forEach((form) => form.classList.remove('active'));
+        document.getElementById('payAmount').innerText = total;
+        document.getElementById('payAmount2').innerText = total;
+        document.getElementById('payAmount3').innerText = total;
+    }
+
+    function selectPayment(method, element) {
+        selectedPayment = method;
+        document.querySelectorAll('.payment-method').forEach((item) => item.classList.remove('selected'));
+        document.querySelectorAll('.payment-form').forEach((form) => form.classList.remove('active'));
+        element.classList.add('selected');
+
+        if (method === 'upi') {
+            document.getElementById('upiForm').classList.add('active');
+        } else if (method === 'card') {
+            document.getElementById('cardForm').classList.add('active');
+        } else {
+            document.getElementById('cashForm').classList.add('active');
+        }
+    }
+
+    function buyNow() {
+        if (cart.length === 0) {
+            alert('Your cart is empty. Add at least one product to proceed.');
+            return;
+        }
+
+        if (!selectedPayment) {
+            alert('Please select a payment method first.');
+            return;
+        }
+
+        if (!addressSaved) {
+            alert('Please add your delivery address before placing the order.');
+            showPage('address');
+            return;
+        }
+
+        let orderDetails = '';
+        let contactDetails = '';
+
+        if (selectedPayment === 'upi') {
+            const upiId = document.getElementById('upiId').value.trim();
+            if (!upiId) {
+                alert('Please enter your UPI ID.');
+                return;
+            }
+            const openApp = confirm('Open your UPI app now and pay ₹' + total + '. Click OK to open the app, then confirm once payment is complete.');
+            if (openApp) {
+                openUpiApp();
+            }
+            const paymentConfirmed = confirm('Once your payment is completed in your UPI app, click OK to continue.');
+            if (!paymentConfirmed) {
+                alert('Please confirm the payment after it is successful in your UPI app.');
+                return;
+            }
+            orderDetails = `Payment method: UPI\nCustomer UPI ID: ${upiId}\nPayment completed through UPI app.`;
+            contactDetails = `UPI payment confirmed. Admin account received the payment.`;
+        } else if (selectedPayment === 'card') {
+            const cardNum = document.getElementById('cardNumber').value.replace(/\s+/g, '');
+            const cardName = document.getElementById('cardName').value.trim();
+            const expiry = document.getElementById('cardExpiry').value.trim();
+            const cvv = document.getElementById('cardCVV').value.trim();
+            if (!cardNum || !cardName || !expiry || !cvv) {
+                alert('Please complete all card details.');
+                return;
+            }
+            if (cardNum.length < 12) {
+                alert('Please enter a valid card number.');
+                return;
+            }
+            orderDetails = `Payment method: Credit/Debit Card\nCardholder: ${cardName}\nCard ending: ${cardNum.slice(-4)}\nPaid to: StyleHub admin account`;
+            contactDetails = `Card ending ${cardNum.slice(-4)}`;
+        } else if (selectedPayment === 'cash') {
+            const pinCode = document.getElementById('pinCode').value.trim();
+            const delivery = document.getElementById('deliveryType').value;
+            if (!pinCode || !delivery) {
+                alert('Please enter PIN code and choose a delivery option.');
+                return;
+            }
+            orderDetails = `Payment method: Cash on Delivery\nPIN Code: ${pinCode}\nDelivery: ${delivery}`;
+            contactDetails = `Delivery: ${delivery}, PIN ${pinCode}`;
+        }
+
+        const addressText = `${addressInfo.name}, ${addressInfo.phone}\n${addressInfo.addressLine1}${addressInfo.addressLine2 ? ', ' + addressInfo.addressLine2 : ''}\n${addressInfo.city}, ${addressInfo.state} - ${addressInfo.pin}`;
+        const itemList = cart.map((item, index) => `${index + 1}. ${item.name} - ₹${item.price}`).join('\n');
+        const message = `New StyleHub order:\n${itemList}\nTotal: ₹${total}\n\nDelivery Address:\n${addressText}\n\n${orderDetails}`;
+        const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+        const smsUrl = `sms:+91${SHOP_NUMBER}?body=${encodeURIComponent(message)}`;
+
+        lastOrderMessage = message;
+        lastSmsMessage = message;
+
+        if (currentUser && allOrders[currentUser]) {
+            const orderToSave = {
+                items: cart,
+                total: total,
+                address: addressInfo,
+                paymentMethod: selectedPayment === 'upi' ? 'UPI' : selectedPayment === 'card' ? 'Credit/Debit Card' : 'Cash on Delivery',
+                timestamp: new Date().toISOString(),
+                stage1: 'pending',
+                stage2: 'pending',
+                stage3: 'pending',
+                adminNote: ''
+            };
+            allOrders[currentUser].push(orderToSave);
+            saveOrdersToStorage();
+        }
+
+        document.getElementById('orderDetails').innerText = `Your order has been submitted successfully. The next update will be available after admin review.`;
+        document.getElementById('orderMessage').innerText = 'Thank you for using Style Hub. Your payment has been received by the admin account and your order is now confirmed.';
+
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        if (isMobile) {
+            window.open(smsUrl, '_blank');
+        } else {
+            window.open(whatsappUrl, '_blank');
+        }
+        showPage('success');
+        playOrderSuccessAudio();
+        resetOrder();
+    }
+
+    function openUpiApp() {
+        const upiId = document.getElementById('upiId').value.trim();
+        if (!upiId) {
+            alert('Please enter your UPI ID before opening the UPI app.');
+            return;
+        }
+        const amount = total.toFixed(2);
+        const upiUrl = `upi://pay?pa=${encodeURIComponent(ADMIN_UPI_ID)}&pn=StyleHub&am=${encodeURIComponent(amount)}&cu=INR&tn=${encodeURIComponent('StyleHub order payment')}`;
+        window.location.href = upiUrl;
+    }
+
+    function resendMessage() {
+        if (!lastOrderMessage) {
+            alert('No order message available to resend yet.');
+            return;
+        }
+        const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lastOrderMessage)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    function sendSms() {
+        if (!lastSmsMessage) {
+            alert('No SMS message available yet. Place an order first.');
+            return;
+        }
+        const smsUrl = `sms:+91${SHOP_NUMBER}?body=${encodeURIComponent(lastSmsMessage)}`;
+        window.open(smsUrl, '_blank');
+    }
+
+    function sendWhatsApp() {
+        if (!lastOrderMessage) {
+            alert('No WhatsApp message available yet. Place an order first.');
+            return;
+        }
+        const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(lastOrderMessage)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+
+    function goHome() {
+        showPage('home');
+    }
+
+    function resetOrder() {
+        cart = [];
+        total = 0;
+        selectedPayment = '';
+        updateCartBadge();
+        document.getElementById('total').innerText = '0';
+        document.getElementById('upiId').value = '';
+        document.getElementById('cardNumber').value = '';
+        document.getElementById('cardName').value = '';
+        document.getElementById('cardExpiry').value = '';
+        document.getElementById('cardCVV').value = '';
+        document.getElementById('pinCode').value = '';
+        document.getElementById('deliveryType').value = '';
+        resetPaymentSelection();
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
